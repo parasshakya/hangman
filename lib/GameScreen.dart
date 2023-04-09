@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'GameModelProvider.dart';
 import 'constants.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({Key? key}) : super(key: key);
-
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
   String characters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
-  String words = 'paras'.toUpperCase();
+  late String words;
   List<String> selectedChar = [];
   int tries = 0;
+  late String hint;
+  List<String> revealedLetters = [];
+
+  void updateRevealedLetters() {
+    for (int i = 0; i < words.length; i++) {
+      String char = words[i];
+      if (selectedChar.contains(char) && !revealedLetters.contains(char)) {
+        setState(() {
+          revealedLetters.add(char);
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final provider = context.read<GameModelProvider>();
+    words = provider.guessWord.toUpperCase();
+    hint = provider.hint;
+    revealedLetters = provider.revealedLetters;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +64,20 @@ class _GameScreenState extends State<GameScreen> {
                             ],
                           )),
                     ),
+                    Text('HINT : $hint'),
                     Expanded(
                         child: Container(
+                            width: double.infinity,
                             color: Colors.teal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            child: Wrap(
+                              spacing: 10,
                               children: words
                                   .split('')
-                                  .map((e) => hiddenLetter(e, !selectedChar.contains(e)))
+                                  .map((e) => hiddenLetter(
+                                      e,
+                                !selectedChar.contains(e),
+                                revealedLetters
+                                      ))
                                   .toList(),
                             )))
                   ],
@@ -74,8 +103,10 @@ class _GameScreenState extends State<GameScreen> {
                                   if (!words.contains(e)) {
                                     tries++;
                                   }
+                                  updateRevealedLetters();
+
                                 });
-                              },
+                        },
                         child: Text(
                           e,
                           style: const TextStyle(fontSize: 24),
@@ -90,26 +121,26 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
-Widget hiddenLetter(String char, bool visible) {
+Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
+  print(revealedLetters);
+  print(char);
   return Container(
     width: 60,
     height: 60,
     decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12)
-    ),
-
+        color: Colors.white, borderRadius: BorderRadius.circular(12)),
     alignment: Alignment.center,
     child: Visibility(
-        visible: !visible,
-        child: Text(
-          char,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        )),
+      visible: !visible || revealedLetters.contains(char.toLowerCase()),
+      child: Text(
+        char,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
   );
 }
 

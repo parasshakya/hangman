@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/GameModelProvider.dart';
 import 'package:hangman/GameScreen.dart';
+import 'package:hangman/HomeScreen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (_) => GameModelProvider(),
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const GameScreen(),
+      home:  HintPage(),
     );
   }
 }
