@@ -67,9 +67,48 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => GameScreen()));
+              if (selectedChipIndices.isEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Sorry !'),
+                      content: const Text('Please select at least one letter.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else if (selectedChipIndices.length == wordToGuess.replaceAll(' ', '').length) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Sorry !'),
+                      content: const Text('You cannot select all the letters.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => GameScreen()));
+              }
             },
+
             child: const Text('Next'),
           ),
         ]),
