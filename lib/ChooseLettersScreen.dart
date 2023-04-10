@@ -35,26 +35,6 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
           const SizedBox(height: 20),
           Wrap(
             spacing: 10,
-            // children: wordToGuess
-            //     .split('')
-            //     .map((letter) => ChoiceChip(
-            //           label: Text(letter),
-            //           selected: isChipSelected,
-            //           onSelected: isChipSelected ?
-            //              null
-            //               : (selected) {
-            //             if (selected) {
-            //               revealedLetters.add(letter);
-            //               context.read<GameModelProvider>().setRevealedLetters(revealedLetters);
-            //               setState(() {
-            //                 isChipSelected = true;
-            //               });
-            //             }
-            //           },
-            //           selectedColor: Colors.red,
-            //           disabledColor: Colors.grey,
-            //         ))
-            //     .toList(),
             children: List.generate(wordToGuess.length, (index) {
               return ChoiceChip(
                 label: Text(wordToGuess.split('')[index]),

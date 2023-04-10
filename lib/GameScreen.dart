@@ -64,21 +64,38 @@ class _GameScreenState extends State<GameScreen> {
                             ],
                           )),
                     ),
-                    Text('HINT : $hint'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text('HINT : $hint', overflow: TextOverflow.fade, maxLines: 1, style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24
+                        ),
+                        ),
+                      ),
+                    ),
                     Expanded(
                         child: Container(
                             width: double.infinity,
                             color: Colors.teal,
-                            child: Wrap(
-                              spacing: 10,
-                              children: words
-                                  .split('')
-                                  .map((e) => hiddenLetter(
-                                      e,
-                                !selectedChar.contains(e),
-                                revealedLetters
-                                      ))
-                                  .toList(),
+                            child: Center(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  runSpacing: 5,
+                                  spacing: 10,
+                                  children: words
+                                      .split('')
+                                      .map((e) => hiddenLetter(
+                                          e,
+                                    !selectedChar.contains(e),
+                                    revealedLetters
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
                             )))
                   ],
                 )),
@@ -122,11 +139,9 @@ class _GameScreenState extends State<GameScreen> {
 }
 
 Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
-  print(revealedLetters);
-  print(char);
   return Container(
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     decoration: BoxDecoration(
         color: Colors.white, borderRadius: BorderRadius.circular(12)),
     alignment: Alignment.center,
