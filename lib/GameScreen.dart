@@ -15,20 +15,9 @@ class _GameScreenState extends State<GameScreen> {
   List<String> selectedChar = [];
   int tries = 0;
   late String hint;
-  List<String> revealedLetters = [];
+   late List<String> revealedLetters;
 
-  void updateRevealedLetters() {
-    for (int i = 0; i < words.length; i++) {
-      String char = words[i];
-      if (selectedChar.contains(char) && !revealedLetters.contains(char)) {
-        setState(() {
-          revealedLetters.add(char);
-        });
-      }
-    }
-  }
-
-  @override
+   @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -68,7 +57,7 @@ class _GameScreenState extends State<GameScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Text('HINT : $hint', overflow: TextOverflow.fade, maxLines: 1, style: TextStyle(
+                        child: Text('HINT : $hint', overflow: TextOverflow.fade, maxLines: 1, style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24
                         ),
@@ -120,7 +109,6 @@ class _GameScreenState extends State<GameScreen> {
                                   if (!words.contains(e)) {
                                     tries++;
                                   }
-                                  updateRevealedLetters();
 
                                 });
                         },
@@ -139,24 +127,39 @@ class _GameScreenState extends State<GameScreen> {
 }
 
 Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
-  return Container(
-    width: 40,
-    height: 40,
-    decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(12)),
-    alignment: Alignment.center,
-    child: Visibility(
-      visible: !visible || revealedLetters.contains(char.toLowerCase()),
-      child: Text(
-        char,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+  if(char == ' ') {
+    return const Text('   ');
+  }else{
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      alignment: Alignment.center,
+      child: revealedLetters.isEmpty ? Visibility(
+        visible: !visible,
+        child: Text(
+          char,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ) : Visibility(
+        visible: !visible || revealedLetters.contains(char.toLowerCase()),
+        child: Text(
+          char,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
 }
 
 Widget buildHangMan(bool visible, String path) {

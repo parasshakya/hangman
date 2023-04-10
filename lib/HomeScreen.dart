@@ -4,17 +4,22 @@ import 'package:provider/provider.dart';
 import 'package:hangman/GameModelProvider.dart';
 
 
-class HintPage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _HintPageState createState() => _HintPageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HintPageState extends State<HintPage> {
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _guessWordController = TextEditingController();
   final TextEditingController _hintController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+
 
   void _startGame(BuildContext context) {
+    setState(() {
+      isLoading = true;
+    });
     // Get the current values of the guess word and hint from the text fields
     final String guessWord = _guessWordController.text;
     final String hint = _hintController.text;
@@ -29,7 +34,12 @@ class _HintPageState extends State<HintPage> {
       context,
       MaterialPageRoute(builder: (context) => ChooseLetterScreen()),
     );
+    setState(() {
+      isLoading = false;
+    });
+
   }
+
 
 
   @override
@@ -107,7 +117,7 @@ class _HintPageState extends State<HintPage> {
                       _startGame(context);
                     }
                 },
-                child: const Text('Start Game'),
+                child: isLoading ? const Center(child: CircularProgressIndicator(),) : const Text('Start Game'),
               ),
             ],
           ),

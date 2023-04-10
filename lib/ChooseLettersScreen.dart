@@ -26,7 +26,6 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(revealedLetters);
 
     return Scaffold(
       body: Center(
@@ -36,27 +35,31 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
           Wrap(
             spacing: 10,
             children: List.generate(wordToGuess.length, (index) {
-              return ChoiceChip(
-                label: Text(wordToGuess.split('')[index]),
-                selected: selectedChipIndices.contains(index),
-                onSelected: (bool selected) {
-                  setState(() {
-                    if (selected) {
-                      revealedLetters.add(wordToGuess.split('')[index]);
-                      context.read<GameModelProvider>().setRevealedLetters(revealedLetters);
+              if(wordToGuess.split('')[index] == ' '){
+                return const Text(' ');
+              }else{
+                return ChoiceChip(
+                  label: Text(wordToGuess.split('')[index]),
+                  selected: selectedChipIndices.contains(index),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        revealedLetters.add(wordToGuess.split('')[index]);
+                        context.read<GameModelProvider>().setRevealedLetters(revealedLetters);
 
-                      // add the index of the selected chip to the set
-                    selectedChipIndices.add(index);
+                        // add the index of the selected chip to the set
+                        selectedChipIndices.add(index);
 
-                  } else {
-                      context.read<GameModelProvider>().removeRevealedLetters(wordToGuess.split('')[index]);
+                      } else {
+                        context.read<GameModelProvider>().removeRevealedLetters(wordToGuess.split('')[index]);
 
-                      // remove the index of the deselected chip from the set
-                    selectedChipIndices.remove(index);
-                  }
-                  });
-                },
-              );
+                        // remove the index of the deselected chip from the set
+                        selectedChipIndices.remove(index);
+                      }
+                    });
+                  },
+                );
+              }
             }),
           ),
           const SizedBox(
