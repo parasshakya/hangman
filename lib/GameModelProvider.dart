@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
 
 class GameModelProvider extends ChangeNotifier {
   late String _guessWord;
   late String _hint;
-  late List<String> _revealedLetters;
+  late List<int> _revealedIndices;
 
   String get guessWord => _guessWord;
   String get hint => _hint;
-  List<String> get revealedLetters => _revealedLetters;
+  List<int> get revealedIndices => _revealedIndices;
 
   void setGuessWord(String guessWord) {
     _guessWord = guessWord;
@@ -21,13 +20,13 @@ class GameModelProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setRevealedLetters(List<String> revealedLetters) {
-    _revealedLetters = revealedLetters;
+  void setRevealedIndices(List<int> revealedIndices) {
+    _revealedIndices = revealedIndices;
     notifyListeners();
   }
 
-  void removeRevealedLetters(String letter){
-    _revealedLetters.remove(letter);
+  void removeRevealedIndices(int index){
+    _revealedIndices.remove(index);
     notifyListeners();
 
   }

@@ -21,8 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
     // Get the current values of the guess word and hint from the text fields
-    final String guessWord = _guessWordController.text;
-    final String hint = _hintController.text;
+    final String guessWord = _guessWordController.text.trim();
+    final String hint = _hintController.text.trim();
 
     // Update the values in the GameModel using the provider package
     final  gameModelProvider = context.read<GameModelProvider>();

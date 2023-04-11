@@ -15,16 +15,16 @@ class _GameScreenState extends State<GameScreen> {
   List<String> selectedChar = [];
   int tries = 0;
   late String hint;
-   late List<String> revealedLetters;
+  late List<int> revealedIndices;
 
-   @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     final provider = context.read<GameModelProvider>();
     words = provider.guessWord.toUpperCase();
     hint = provider.hint;
-    revealedLetters = provider.revealedLetters;
+    revealedIndices = provider.revealedIndices;
   }
 
   @override
@@ -57,10 +57,12 @@ class _GameScreenState extends State<GameScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Text('HINT : $hint', overflow: TextOverflow.fade, maxLines: 1, style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24
-                        ),
+                        child: Text('HINT : $hint', overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24
+                          ),
                         ),
                       ),
                     ),
@@ -72,17 +74,22 @@ class _GameScreenState extends State<GameScreen> {
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
                                 child: Wrap(
-                                  direction: Axis.horizontal,
-                                  runSpacing: 5,
-                                  spacing: 10,
-                                  children: words
-                                      .split('')
-                                      .map((e) => hiddenLetter(
-                                          e,
-                                    !selectedChar.contains(e),
-                                    revealedLetters
-                                          ))
-                                      .toList(),
+                                    direction: Axis.horizontal,
+                                    runSpacing: 5,
+                                    spacing: 10,
+                                    children:
+                                    // words
+                                    //     .split('')
+                                    //     .map((e) => hiddenLetter(
+                                    //         e,
+                                    //   !selectedChar.contains(e),
+                                    //   revealedIndices
+                                    //         ))
+                                    //     .toList(),
+                                    List.generate(words.length, (index) {
+                                      final word = words.split('')[index];
+                                         return hiddenLetter(word, !selectedChar.contains(word), revealedIndices, index);}
+                                    )
                                 ),
                               ),
                             )))
@@ -90,35 +97,35 @@ class _GameScreenState extends State<GameScreen> {
                 )),
             Expanded(
                 child: Container(
-              color: Colors.deepPurple,
-              child: GridView.count(
-                padding: const EdgeInsets.all(12),
-                crossAxisCount: 7,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 6,
-                children: characters
-                    .split('')
-                    .map((e) => ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0, backgroundColor: Colors.black),
-                        onPressed: selectedChar.contains(e)
-                            ? null
-                            : () {
-                                setState(() {
-                                  selectedChar.add(e);
-                                  if (!words.contains(e)) {
-                                    tries++;
-                                  }
-
-                                });
-                        },
-                        child: Text(
-                          e,
-                          style: const TextStyle(fontSize: 24),
-                        )))
-                    .toList(),
-              ),
-            ))
+                  color: Colors.deepPurple,
+                  child: GridView.count(
+                    padding: const EdgeInsets.all(12),
+                    crossAxisCount: 7,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 6,
+                    children: characters
+                        .split('')
+                        .map((e) =>
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0, backgroundColor: Colors.black),
+                            onPressed: selectedChar.contains(e)
+                                ? null
+                                : () {
+                              setState(() {
+                                selectedChar.add(e);
+                                if (!words.contains(e)) {
+                                  tries++;
+                                }
+                              });
+                            },
+                            child: Text(
+                              e,
+                              style: const TextStyle(fontSize: 24),
+                            )))
+                        .toList(),
+                  ),
+                ))
           ],
         ),
       ),
@@ -126,28 +133,18 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
-Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
-  if(char == ' ') {
+Widget hiddenLetter(String char, bool visible, List<int> revealedIndices, int index) {
+  if (char == ' ') {
     return const Text('   ');
-  }else{
+  } else {
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(12)),
       alignment: Alignment.center,
-      child: revealedLetters.isEmpty ? Visibility(
-        visible: !visible,
-        child: Text(
-          char,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ) : Visibility(
-        visible: !visible || revealedLetters.contains(char.toLowerCase()),
+      child:  Visibility(
+        visible: !visible || revealedIndices.contains(index),
         child: Text(
           char,
           style: const TextStyle(
@@ -159,7 +156,6 @@ Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
       ),
     );
   }
-
 }
 
 Widget buildHangMan(bool visible, String path) {
