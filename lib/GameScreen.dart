@@ -106,7 +106,7 @@ class _GameScreenState extends State<GameScreen> {
                                     direction: Axis.horizontal,
                                     runSpacing: 3,
                                     spacing: 2,
-                                    children: words
+                                    children: context.read<GameModelProvider>().guessWord
                                         .split('')
                                         .map((e) => hiddenLetter(
                                             e,
@@ -242,28 +242,30 @@ void showLosingDialog(BuildContext context) {
 }
 
 Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
-  if (char == ' ') {
-    return const Text('   ');
-  } else {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(12)),
-      alignment: Alignment.center,
-      child: Visibility(
-        visible: visible || revealedLetters.contains(char.toLowerCase()),
-        child: Text(
-          char,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    if(char == ' '){
+      return Text('   ');
+    }
+    else{
+      return Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        alignment: Alignment.center,
+        child: Visibility(
+          visible: visible || revealedLetters.contains(char.toLowerCase()),
+          child: Text(
+            char,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
+
 }
 
 Widget buildHangMan(bool visible, String path) {
