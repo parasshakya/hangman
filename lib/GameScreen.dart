@@ -83,7 +83,7 @@ class _GameScreenState extends State<GameScreen> {
                               ],
                             )),
                       ),
-                      Text('HINT', style: TextStyle(fontSize: 20),),
+                      const Text('HINT', style: TextStyle(fontSize: 20),),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Wrap(
