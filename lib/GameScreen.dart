@@ -42,15 +42,15 @@ class _GameScreenState extends State<GameScreen> {
             child: const Text('No'),
           ),
           TextButton(
-            onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()), result: true),
+            onPressed: () => Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => HomeScreen()),
+                result: true),
             child: const Text('Yes'),
           ),
         ],
       ),
     ).then((value) => value ?? false);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,23 +76,20 @@ class _GameScreenState extends State<GameScreen> {
                                 buildHangMan(tries >= 1, HangManParts.head),
                                 buildHangMan(tries >= 2, HangManParts.body),
                                 buildHangMan(tries >= 3, HangManParts.leftHand),
-                                buildHangMan(tries >= 4, HangManParts.rightHand),
+                                buildHangMan(
+                                    tries >= 4, HangManParts.rightHand),
                                 buildHangMan(tries >= 5, HangManParts.leftLeg),
                                 buildHangMan(tries >= 6, HangManParts.rightLeg),
                               ],
                             )),
                       ),
+                      Text('HINT', style: TextStyle(fontSize: 20),),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Text(
-                            'HINT : $hint',
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 24),
-                          ),
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.start,
+                          children: hint.split('').map((e) => Text(e)).toList(),
                         ),
                       ),
                       Expanded(
@@ -104,14 +101,13 @@ class _GameScreenState extends State<GameScreen> {
                                   scrollDirection: Axis.vertical,
                                   child: Wrap(
                                     direction: Axis.horizontal,
-                                    runSpacing: 5,
-                                    spacing: 10,
+                                    runSpacing: 3,
+                                    spacing: 2,
                                     children: words
                                         .split('')
                                         .map((e) => hiddenLetter(
                                             e,
-                                            selectedChar
-                                                .contains(e),
+                                            selectedChar.contains(e),
                                             revealedLetters))
                                         .toList(),
                                   ),
@@ -131,8 +127,9 @@ class _GameScreenState extends State<GameScreen> {
                       .split('')
                       .map((e) => ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(5),
-                              elevation: 0, backgroundColor: Colors.black),
+                              padding: const EdgeInsets.all(5),
+                              elevation: 0,
+                              backgroundColor: Colors.black),
                           onPressed: selectedChar.contains(e.toLowerCase())
                               ? null
                               : () {
@@ -142,7 +139,8 @@ class _GameScreenState extends State<GameScreen> {
                                       tries++;
                                     }
                                     if (words.toLowerCase().split('').every(
-                                        (char) => selectedChar.contains(char))) {
+                                        (char) =>
+                                            selectedChar.contains(char))) {
                                       showWinningDialog(context);
                                     }
                                     if (tries >= 6) {
@@ -172,7 +170,8 @@ void showWinningDialog(BuildContext context) {
       return AlertDialog(
         backgroundColor: Colors.transparent.withOpacity(0.5),
         title: const Text('Congratulations!'),
-        content:  Text('You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
+        content: Text(
+            'You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
         actions: <Widget>[
           ElevatedButton(
             child: const Text('OK'),
@@ -187,7 +186,6 @@ void showWinningDialog(BuildContext context) {
   );
 }
 
-
 void showLosingDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -200,8 +198,8 @@ void showLosingDialog(BuildContext context) {
           ElevatedButton(
             child: const Text('Retry'),
             onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => const GameScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const GameScreen()));
             },
           ),
           ElevatedButton(
