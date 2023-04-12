@@ -174,10 +174,14 @@ void showWinningDialog(BuildContext context) {
             'You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
         actions: <Widget>[
           ElevatedButton(
-            child: const Text('OK'),
+            child: const Text('Go Home'),
             onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HomeScreen()));
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/homeScreen',
+                    (route) => false,
+              );
+
             },
           ),
         ],

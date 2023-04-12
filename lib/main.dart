@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hangman/ChooseLettersScreen.dart';
 import 'package:hangman/GameModelProvider.dart';
 import 'package:hangman/GameScreen.dart';
 import 'package:hangman/HomeScreen.dart';
@@ -22,6 +23,11 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
+      routes: {
+        '/homeScreen': (context) => HomeScreen(),
+        '/chooseLettersScreen': (context) => ChooseLetterScreen(),
+        '/gameScreen': (context) => GameScreen(),
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home:  HomeScreen(),
