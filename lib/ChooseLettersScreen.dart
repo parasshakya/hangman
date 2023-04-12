@@ -2,34 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:hangman/GameModelProvider.dart';
 import 'package:hangman/GameScreen.dart';
 import 'package:provider/provider.dart';
-
 class ChooseLetterScreen extends StatefulWidget {
   @override
   State<ChooseLetterScreen> createState() => _ChooseLetterScreenState();
 }
-
 class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
   late String wordToGuess;
-   List<int> revealedIndices = [];
-
-
+  List<String> revealedLetters = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    revealedLetters.clear();
     final gameModelProvider = context.read<GameModelProvider>();
     wordToGuess = gameModelProvider.guessWord;
   }
-
-
+  Set<int> selectedChipIndices = {};
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const Text('Choose letters to reveal to the other player'),
+          const SizedBox(height: 10,),
+          const Text('Choosing a repeating letter will select all the repeated letters'),
+
           const SizedBox(height: 20),
           Wrap(
             spacing: 10,
@@ -39,19 +36,24 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
               }else{
                 return ChoiceChip(
                   label: Text(wordToGuess.split('')[index]),
-                  selected: revealedIndices.contains(index),
+                  selected: selectedChipIndices.contains(index),
                   onSelected: (bool selected) {
                     setState(() {
+                      String letter = wordToGuess.split('')[index];
+
                       if (selected) {
-                          revealedIndices.add(index);
-                        // add the index of the selected chip to the list
-                        context.read<GameModelProvider>().setRevealedIndices(revealedIndices);
-
+                        revealedLetters.add(wordToGuess.split('')[index]);
+                        context.read<GameModelProvider>().setRevealedLetters(revealedLetters);
+                        // add the index of the selected chip to the set
+                        selectedChipIndices.addAll(wordToGuess.split('').asMap().entries
+                            .where((entry) => entry.value == letter)
+                            .map((entry) => entry.key));
                       } else {
-
-                        // remove the index of the deselected chip
-                        context.read<GameModelProvider>().removeRevealedIndices(index);
-
+                        context.read<GameModelProvider>().removeRevealedLetters(wordToGuess.split('')[index]);
+                        // remove the index of the deselected chip from the set
+                        selectedChipIndices.removeAll(wordToGuess.split('').asMap().entries
+                            .where((entry) => entry.value == letter)
+                            .map((entry) => entry.key));
                       }
                     });
                   },
@@ -64,7 +66,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (revealedIndices.isEmpty) {
+              if (selectedChipIndices.isEmpty) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -82,7 +84,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
                     );
                   },
                 );
-              } else if (revealedIndices.length == wordToGuess.replaceAll(' ', '').length) {
+              } else if (selectedChipIndices.length == wordToGuess.replaceAll(' ', '').length) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {

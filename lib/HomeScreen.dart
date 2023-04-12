@@ -76,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   if(val.length > 12){
                     return "Guess word should be less than 13 letters";
                   }
+                  if (!RegExp(r'^[a-zA-Z]+$').hasMatch(val)) {
+                    return "Guess word should contain only letters";
+                  }
                   else{
                     return null;
                   }
@@ -99,6 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   if(val.length > 15){
                     return 'Hint should be less than 15 letters';
+                  }
+                  if (!RegExp(r'^[a-zA-Z]+$').hasMatch(val)) {
+                    return "Hint should contain only letters";
                   }
                   else{
                     return null;
