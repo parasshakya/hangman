@@ -83,7 +83,10 @@ class _GameScreenState extends State<GameScreen> {
                               ],
                             )),
                       ),
-                      const Text('HINT', style: TextStyle(fontSize: 20),),
+                      const Text(
+                        'HINT',
+                        style: TextStyle(fontSize: 20),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Wrap(
@@ -166,25 +169,30 @@ class _GameScreenState extends State<GameScreen> {
 void showWinningDialog(BuildContext context) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: const Text('Congratulations!'),
-        content: Text(
-            'You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Go Home'),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/homeScreen',
-                    (route) => false,
-              );
-
-            },
-          ),
-        ],
+      return WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: AlertDialog(
+          backgroundColor: Colors.transparent.withOpacity(0.5),
+          title: const Text('Congratulations!'),
+          content: Text(
+              'You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Go Home'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.withOpacity(0.5)),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/homeScreen',
+                  (route) => false,
+                );
+              },
+            ),
+          ],
+        ),
       );
     },
   );
@@ -193,27 +201,35 @@ void showWinningDialog(BuildContext context) {
 void showLosingDialog(BuildContext context) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
-        title: const Text('Game Over'),
-        content: const Text('You have lost the game.'),
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Retry'),
-            onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const GameScreen()));
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Go Home'),
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => HomeScreen()));
-            },
-          ),
-        ],
+      return WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: AlertDialog(
+          backgroundColor: Colors.transparent.withOpacity(0.5),
+          title: const Text('Game Over'),
+          content: const Text('You have lost the game.'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.withOpacity(0.5)),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const GameScreen()));
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Go Home'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey.withOpacity(0.5)),
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => HomeScreen()));
+              },
+            ),
+          ],
+        ),
       );
     },
   );
