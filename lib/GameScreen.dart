@@ -6,6 +6,8 @@ import 'GameModelProvider.dart';
 import 'constants.dart';
 
 class GameScreen extends StatefulWidget {
+  const GameScreen({super.key});
+
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
@@ -23,114 +25,140 @@ class _GameScreenState extends State<GameScreen> {
     // TODO: implement initState
     super.initState();
     final provider = context.read<GameModelProvider>();
-    words = provider.guessWord.toUpperCase();
+    words = provider.guessWord.toLowerCase().replaceAll(' ', '');
     hint = provider.hint;
     revealedLetters = provider.revealedLetters;
   }
+
+  Future<bool> _onBackPressed() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Quit Game?'),
+        content: const Text('Are you sure you want to quit the game?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()), result: true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     selectedChar.addAll(revealedLetters);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-                flex: 2,
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                          padding: const EdgeInsets.all(30),
-                          child: Stack(
-                            children: [
-                              buildHangMan(tries >= 0, HangManParts.pole),
-                              buildHangMan(tries >= 1, HangManParts.head),
-                              buildHangMan(tries >= 2, HangManParts.body),
-                              buildHangMan(tries >= 3, HangManParts.leftHand),
-                              buildHangMan(tries >= 4, HangManParts.rightHand),
-                              buildHangMan(tries >= 5, HangManParts.leftLeg),
-                              buildHangMan(tries >= 6, HangManParts.rightLeg),
-                            ],
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Text(
-                          'HINT : $hint',
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24),
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                            padding: const EdgeInsets.all(30),
+                            child: Stack(
+                              children: [
+                                buildHangMan(tries >= 0, HangManParts.pole),
+                                buildHangMan(tries >= 1, HangManParts.head),
+                                buildHangMan(tries >= 2, HangManParts.body),
+                                buildHangMan(tries >= 3, HangManParts.leftHand),
+                                buildHangMan(tries >= 4, HangManParts.rightHand),
+                                buildHangMan(tries >= 5, HangManParts.leftLeg),
+                                buildHangMan(tries >= 6, HangManParts.rightLeg),
+                              ],
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            'HINT : $hint',
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                        child: Container(
-                            width: double.infinity,
-                            color: Colors.teal,
-                            child: Center(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.vertical,
-                                child: Wrap(
-                                  direction: Axis.horizontal,
-                                  runSpacing: 5,
-                                  spacing: 10,
-                                  children: words
-                                      .split('')
-                                      .map((e) => hiddenLetter(
-                                          e,
-                                          selectedChar
-                                              .contains(e.toLowerCase()),
-                                          revealedLetters))
-                                      .toList(),
+                      Expanded(
+                          child: Container(
+                              width: double.infinity,
+                              color: Colors.teal,
+                              child: Center(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Wrap(
+                                    direction: Axis.horizontal,
+                                    runSpacing: 5,
+                                    spacing: 10,
+                                    children: words
+                                        .split('')
+                                        .map((e) => hiddenLetter(
+                                            e,
+                                            selectedChar
+                                                .contains(e),
+                                            revealedLetters))
+                                        .toList(),
+                                  ),
                                 ),
-                              ),
-                            )))
-                  ],
-                )),
-            Expanded(
-                child: Container(
-              color: Colors.deepPurple,
-              child: GridView.count(
-                padding: const EdgeInsets.all(12),
-                crossAxisCount: 7,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 6,
-                children: characters
-                    .split('')
-                    .map((e) => ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0, backgroundColor: Colors.black),
-                        onPressed: selectedChar.contains(e.toLowerCase())
-                            ? null
-                            : () {
-                                setState(() {
-                                  selectedChar.add(e.toLowerCase());
-                                  if (!words.contains(e)) {
-                                    tries++;
-                                  }
-                                  if (words.toLowerCase().split('').every(
-                                      (char) => selectedChar.contains(char))) {
-                                    showWinningDialog(context);
-                                  }
-                                  if (tries >= 6) {
-                                    showLosingDialog(context);
-                                  }
-                                });
-                              },
-                        child: Text(
-                          e,
-                          style: const TextStyle(fontSize: 24),
-                        )))
-                    .toList(),
-              ),
-            ))
-          ],
+                              )))
+                    ],
+                  )),
+              Expanded(
+                  child: Container(
+                color: Colors.deepPurple,
+                child: GridView.count(
+                  padding: const EdgeInsets.all(12),
+                  crossAxisCount: 7,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 6,
+                  children: characters
+                      .split('')
+                      .map((e) => ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(5),
+                              elevation: 0, backgroundColor: Colors.black),
+                          onPressed: selectedChar.contains(e.toLowerCase())
+                              ? null
+                              : () {
+                                  setState(() {
+                                    selectedChar.add(e.toLowerCase());
+                                    if (!words.contains(e.toLowerCase())) {
+                                      tries++;
+                                    }
+                                    if (words.toLowerCase().split('').every(
+                                        (char) => selectedChar.contains(char))) {
+                                      showWinningDialog(context);
+                                    }
+                                    if (tries >= 6) {
+                                      showLosingDialog(context);
+                                    }
+                                  });
+                                },
+                          child: Text(
+                            e,
+                            style: const TextStyle(fontSize: 24),
+                          )))
+                      .toList(),
+                ),
+              ))
+            ],
+          ),
         ),
       ),
     );
@@ -142,11 +170,12 @@ void showWinningDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Congratulations!'),
-        content: Text('You have won the game.'),
+        backgroundColor: Colors.transparent.withOpacity(0.5),
+        title: const Text('Congratulations!'),
+        content:  Text('You have won the game.\n"${context.read<GameModelProvider>().guessWord}" is the right answer'),
         actions: <Widget>[
           ElevatedButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => HomeScreen()));
@@ -158,16 +187,25 @@ void showWinningDialog(BuildContext context) {
   );
 }
 
+
 void showLosingDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Game Over'),
-        content: Text('You have lost the game.'),
+        backgroundColor: Colors.transparent.withOpacity(0.5),
+        title: const Text('Game Over'),
+        content: const Text('You have lost the game.'),
         actions: <Widget>[
           ElevatedButton(
-            child: Text('OK'),
+            child: const Text('Retry'),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => const GameScreen()));
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Go Home'),
             onPressed: () {
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (_) => HomeScreen()));
