@@ -215,8 +215,11 @@ void showLosingDialog(BuildContext context) {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.withOpacity(0.5)),
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) => const GameScreen()));
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/gameScreen',
+                      (route) => false,
+                );
               },
             ),
             ElevatedButton(
@@ -224,8 +227,11 @@ void showLosingDialog(BuildContext context) {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.withOpacity(0.5)),
               onPressed: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/homeScreen',
+                      (route) => false,
+                );
               },
             ),
           ],
