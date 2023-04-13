@@ -110,7 +110,7 @@ class _GameScreenState extends State<GameScreen> {
                                         .split('')
                                         .map((e) => hiddenLetter(
                                             e,
-                                            selectedChar.contains(e),
+                                            selectedChar.contains(e.toLowerCase()),
                                             revealedLetters))
                                         .toList(),
                                   ),
@@ -253,7 +253,7 @@ Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
             color: Colors.white, borderRadius: BorderRadius.circular(12)),
         alignment: Alignment.center,
         child: Visibility(
-          visible: visible || revealedLetters.contains(char.toLowerCase()),
+          visible: visible || revealedLetters.contains(char),
           child: Text(
             char,
             style: const TextStyle(
