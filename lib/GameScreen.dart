@@ -253,7 +253,7 @@ Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
             color: Colors.white, borderRadius: BorderRadius.circular(12)),
         alignment: Alignment.center,
         child: Visibility(
-          visible: visible || revealedLetters.contains(char),
+          visible: visible || revealedLetters.join('').toLowerCase().contains(char),
           child: Text(
             char,
             style: const TextStyle(
