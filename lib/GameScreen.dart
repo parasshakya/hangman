@@ -42,9 +42,11 @@ class _GameScreenState extends State<GameScreen> {
             child: const Text('No'),
           ),
           TextButton(
-            onPressed: () => Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => HomeScreen()),
-                result: true),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/homeScreen',
+              (route) => false,
+            ),
             child: const Text('Yes'),
           ),
         ],
@@ -55,7 +57,6 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     selectedChar.addAll(revealedLetters);
-
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -106,11 +107,14 @@ class _GameScreenState extends State<GameScreen> {
                                     direction: Axis.horizontal,
                                     runSpacing: 3,
                                     spacing: 2,
-                                    children: context.read<GameModelProvider>().guessWord
+                                    children: context
+                                        .read<GameModelProvider>()
+                                        .guessWord
                                         .split('')
                                         .map((e) => hiddenLetter(
                                             e,
-                                            selectedChar.contains(e.toLowerCase()),
+                                            selectedChar
+                                                .contains(e.toLowerCase()),
                                             revealedLetters))
                                         .toList(),
                                   ),
@@ -218,7 +222,7 @@ void showLosingDialog(BuildContext context) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/gameScreen',
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -230,7 +234,7 @@ void showLosingDialog(BuildContext context) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/homeScreen',
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -242,30 +246,29 @@ void showLosingDialog(BuildContext context) {
 }
 
 Widget hiddenLetter(String char, bool visible, List<String> revealedLetters) {
-    if(char == ' '){
-      return Text('   ');
-    }
-    else{
-      return Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(12)),
-        alignment: Alignment.center,
-        child: Visibility(
-          visible: visible || revealedLetters.join('').toLowerCase().contains(char),
-          child: Text(
-            char,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+  if (char == ' ') {
+    return Text('   ');
+  } else {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      alignment: Alignment.center,
+      child: Visibility(
+        visible:
+            visible || revealedLetters.join('').toLowerCase().contains(char),
+        child: Text(
+          char,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      );
-    }
-
+      ),
+    );
+  }
 }
 
 Widget buildHangMan(bool visible, String path) {
