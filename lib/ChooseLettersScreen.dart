@@ -36,10 +36,11 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
               'Choosing a repeating letter will select all the repeated letters', textAlign: TextAlign.center,),
           const SizedBox(height: 20),
           Wrap(
-            spacing: 10,
+            spacing: 4,
+            alignment: WrapAlignment.center,
             children: List.generate(wordToGuess.length, (index) {
               if (wordToGuess.split('')[index] == ' ') {
-                return const Text(' ');
+                return  Container(height: 1,);
               } else {
                 return ChoiceChip(
                   label: Text(wordToGuess.split('')[index]),

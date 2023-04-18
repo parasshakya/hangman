@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'GameModelProvider.dart';
 import 'constants.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen();
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -83,44 +84,63 @@ class _GameScreenState extends State<GameScreen> {
                               ],
                             )),
                       ),
-                      const Text(
-                        'HINT',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          alignment: WrapAlignment.start,
-                          children: hint.split('').map((e) => Text(e)).toList(),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        width: double.infinity,
+                        child: Card(
+                          color: Colors.blue.shade700,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 4,),
+                              const Icon(
+                                Icons.lightbulb,
+                                color: Colors.yellowAccent,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  alignment: WrapAlignment.start,
+                                  children:
+                                      hint.split('').map((e) => Text(e
+                                      ,
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600
+                                      ),)).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
+                      SizedBox(height: 10,),
                       Expanded(
+                        flex: 2,
                           child: Container(
-                              width: double.infinity,
-                              color: Colors.teal,
-                              child: Center(
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    runSpacing: 3,
-                                    spacing: 2,
-                                    children: context
-                                        .read<GameModelProvider>()
-                                        .guessWord
-                                        .split('')
-                                        .map((e) => hiddenLetter(
-                                            e,
-                                            selectedChar
-                                                .contains(e.toLowerCase()),
-                                            revealedLetters))
-                                        .toList(),
-                                  ),
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            width: double.infinity,
+                            child: Center(
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  runSpacing: 3,
+                                  spacing: 2,
+                                  children: context
+                                      .read<GameModelProvider>()
+                                      .guessWord
+                                      .split('')
+                                      .map((e) => hiddenLetter(
+                                          e,
+                                          selectedChar
+                                              .contains(e.toLowerCase()),
+                                          revealedLetters))
+                                      .toList(),
                                 ),
-                              )))
+                              ),
+                          ))
                     ],
                   )),
+              SizedBox(height: 10,),
               Expanded(
                   child: Container(
                 color: Colors.deepPurple,

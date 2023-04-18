@@ -118,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (val!.isEmpty) {
                       return 'Please enter a guess word';
                     }
-                    if (val.replaceAll(' ', '').length > 30) {
-                      return 'Guess Word should be less than 30 letters';
+                    if (val.replaceAll(' ', '').length > 27) {
+                      return 'Guess Word should be less than 28 letters';
                     }
                     if (!RegExp(r'^[a-zA-Z]+$')
                         .hasMatch(val.replaceAll(RegExp(r'\s+'), ''))) {
