@@ -18,7 +18,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
     super.initState();
     revealedLetters.clear();
     final gameModelProvider = context.read<GameModelProvider>();
-    wordToGuess = gameModelProvider.guessWord.toLowerCase();
+    wordToGuess = gameModelProvider.guessWord;
   }
 
   Set<int> selectedChipIndices = {};
@@ -46,10 +46,10 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
                   selected: selectedChipIndices.contains(index),
                   onSelected: (bool selected) {
                     setState(() {
-                      String letter = wordToGuess.split('')[index];
+                      String letter = wordToGuess.split('')[index].toLowerCase();
 
                       if (selected) {
-                        revealedLetters.add(wordToGuess.split('')[index]);
+                        revealedLetters.add(letter);
                         context
                             .read<GameModelProvider>()
                             .setRevealedLetters(revealedLetters);
@@ -58,7 +58,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
                             .split('')
                             .asMap()
                             .entries
-                            .where((entry) => entry.value == letter)
+                            .where((entry) => entry.value.toLowerCase() == letter)
                             .map((entry) => entry.key));
                       } else {
                         context.read<GameModelProvider>().removeRevealedLetters(
@@ -68,7 +68,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
                             .split('')
                             .asMap()
                             .entries
-                            .where((entry) => entry.value == letter)
+                            .where((entry) => entry.value.toLowerCase() == letter)
                             .map((entry) => entry.key));
                       }
                     });

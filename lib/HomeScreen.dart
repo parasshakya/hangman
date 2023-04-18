@@ -6,8 +6,6 @@ import 'package:hangman/GameModelProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -18,7 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _hintController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  final _hintFocusNode = FocusNode(); // Create a FocusNode for the hint TextField
+  final _hintFocusNode =
+      FocusNode(); // Create a FocusNode for the hint TextField
 
   void _onGuessWordSubmitted() {
     // When the guess word is submitted, move the focus to the hint TextField
@@ -52,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ).then((value) => value ?? false);
   }
 
-
   void _startGame(BuildContext context) {
     setState(() {
       isLoading = true;
@@ -62,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final String hint = _hintController.text.trim();
 
     // Update the values in the GameModel using the provider package
-    final  gameModelProvider = context.read<GameModelProvider>();
+    final gameModelProvider = context.read<GameModelProvider>();
     gameModelProvider.setHint(hint);
     gameModelProvider.setGuessWord(guessWord);
 
@@ -74,10 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = false;
     });
-
   }
-
-
 
   @override
   void dispose() {
@@ -107,8 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
-                  height: 150,
-                    child: Image.asset('assets/images/hangmanImage.png', color: Colors.white,)),
+                    height: 150,
+                    child: Image.asset(
+                      'assets/images/hangmanImage.png',
+                      color: Colors.white,
+                    )),
                 const SizedBox(height: 40.0),
                 const Text(
                   'Enter a word for your opponent to guess:',
@@ -116,18 +114,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8.0),
                 TextFormField(
-                  validator: (val){
-                    if(val!.isEmpty ){
+                  validator: (val) {
+                    if (val!.isEmpty) {
                       return 'Please enter a guess word';
                     }
-                    if(val.replaceAll(' ', '').length > 30){
+                    if (val.replaceAll(' ', '').length > 30) {
                       return 'Guess Word should be less than 30 letters';
                     }
-                    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(val.replaceAll(RegExp(r'\s+'), ''))) {
+                    if (!RegExp(r'^[a-zA-Z]+$')
+                        .hasMatch(val.replaceAll(RegExp(r'\s+'), ''))) {
                       return "Guess word should contain only letters";
                     }
-
-                    else{
+                    if (val.length == 1) {
+                      return "Guess word should contain at least two letters";
+                    }
+                    if (val
+                            .replaceAll(RegExp(r'\s+'), '')
+                            .toLowerCase()
+                            .split('')
+                            .toSet()
+                            .length ==
+                        1) {
+                      return "Guess word should contain at least two different letters";
+                    } else {
                       return null;
                     }
                   },
@@ -147,17 +156,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextFormField(
                   focusNode: _hintFocusNode,
                   onFieldSubmitted: (_) => _onHintSubmitted(),
-                  validator: (val){
-                    if(val!.isEmpty){
+                  validator: (val) {
+                    if (val!.isEmpty) {
                       return 'Please enter a hint';
                     }
-                    if(val.replaceAll(' ', '').length > 70){
+                    if (val.replaceAll(' ', '').length > 70) {
                       return 'Hint should be less than 70 letters';
                     }
-                    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(val.replaceAll(RegExp(r'\s+'), ''))) {
+                    if (!RegExp(r'^[a-zA-Z]+$')
+                        .hasMatch(val.replaceAll(RegExp(r'\s+'), ''))) {
                       return "Hint should contain only letters";
-                    }
-                    else{
+                    } else {
                       return null;
                     }
                   },
@@ -170,34 +179,49 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                      if(_formKey.currentState!.validate()){
-                        _startGame(context);
-                      }
+                    if (_formKey.currentState!.validate()) {
+                      _startGame(context);
+                    }
                   },
-                  child: isLoading ? const Center(child: CircularProgressIndicator(),) : const Text('Start Game'),
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : const Text('Start Game'),
                 ),
-                const SizedBox(height: 100,),
-                const Text('Contact Developer', style: TextStyle(color: Colors.grey), textAlign: TextAlign.center,),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 100,
+                ),
+                const Text(
+                  'Contact Developer',
+                  style: TextStyle(color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                       icon: const FaIcon(FontAwesomeIcons.instagram),
                       onPressed: () {
-                        launchUrlString('https://www.instagram.com/lllparaslll/');
+                        launchUrlString(
+                            'https://www.instagram.com/lllparaslll/');
                       },
                     ),
                     IconButton(
                       icon: const FaIcon(FontAwesomeIcons.github),
                       onPressed: () {
-                        launchUrlString('https://github.com/parasshakya/hangman');
+                        launchUrlString(
+                            'https://github.com/parasshakya/hangman');
                       },
                     ),
                     IconButton(
                       icon: const FaIcon(FontAwesomeIcons.facebook),
                       onPressed: () {
-                        launchUrlString('https://www.facebook.com/parazjaggedup.shakya');
+                        launchUrlString(
+                            'https://www.facebook.com/parazjaggedup.shakya');
                       },
                     ),
                   ],
