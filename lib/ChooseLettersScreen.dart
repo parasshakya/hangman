@@ -28,12 +28,7 @@ class _ChooseLetterScreenState extends State<ChooseLetterScreen> {
     return Scaffold(
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text('Choose letters to reveal to the other player'),
-          const SizedBox(
-            height: 10,
-          ),
-          const Text(
-              'Choosing a repeating letter will select all the repeated letters', textAlign: TextAlign.center,),
+          const Text('Select letter(s) to reveal to the other player(s)'),
           const SizedBox(height: 20),
           Wrap(
             spacing: 4,

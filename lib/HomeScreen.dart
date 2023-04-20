@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hangman/ChooseLettersScreen.dart';
+import 'package:hangman/HowToPlay.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/GameModelProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -91,6 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
           automaticallyImplyLeading: false,
           elevation: 0,
+          actions: [
+            IconButton(onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HowToPlay()));
+
+            }, icon:
+            Icon(Icons.integration_instructions_outlined))
+          ],
         ),
         resizeToAvoidBottomInset: false,
         body: Padding(
