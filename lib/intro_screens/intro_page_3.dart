@@ -10,7 +10,7 @@ class IntroPage3 extends StatelessWidget {
       padding: EdgeInsets.all(10),
       color: Colors.purpleAccent,
       child: Center(
-          child : Text('Made With Love ❤️ \n\n By \n\n Paras Shakya', style: GoogleFonts.raleway(
+          child : Text('Made With Love ❤️\n\nBy\n\nParas Shakya', style: GoogleFonts.raleway(
               fontSize: 30,
               fontWeight: FontWeight.w600
           ),

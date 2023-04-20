@@ -48,7 +48,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
+                  onLastPage ?  Text('             '): GestureDetector(
                       child: Text('Skip', style: TextStyle(
                         fontSize: 20
                       ),),
