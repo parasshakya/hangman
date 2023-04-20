@@ -12,7 +12,7 @@ class HowToPlay extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 40,),
+              SizedBox(height: 30,),
               Text(
                 'How To Play',
                 style: TextStyle(
@@ -22,9 +22,9 @@ class HowToPlay extends StatelessWidget {
                     decorationThickness: 2,
                     decorationStyle: TextDecorationStyle.dashed),
               ),
-              SizedBox(
-                height: 30,
-              ),
+              Container(
+                  margin: EdgeInsets.only(left: 40),
+                  child: Image.asset("assets/images/howToPlaySketch.png")),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
